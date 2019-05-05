@@ -4,15 +4,11 @@ public class LinkedStack implements Stack {
     Node top;
     int size;					// 필드로 top을 가리키는 노드 , 스택의 size를 나타내는 인트형 변수를 갖는다.
     // top이 첫노드이므로 삽입과 삭제가 맨앞에서 이루어진다.
-    public boolean isEmpty() {
-
-        return (size == 0);
-    }							// size가 0이면 true 반환 (비어있을 때 true)
 
     @Override
     public Node peek() {
         // TODO Auto-generated method stub
-        if(size==0)throw new java.util.NoSuchElementException();
+        if(isEmpty())throw new java.util.NoSuchElementException();
         System.out.println("top : "+top.data);
         return this.top;
     }							// top에 해당하는 node를 반환한다.
@@ -20,12 +16,12 @@ public class LinkedStack implements Stack {
     @Override
     public Node pop() {
         // TODO Auto-generated method stub
-        if(size==0)throw new java.util.NoSuchElementException();
-        Node tmp = this.top;
+        if(isEmpty())throw new java.util.NoSuchElementException();
+        Node popedNode = this.top;
         this.top = this.top.next;
         size--;
-        System.out.println("pop : "+tmp.data);
-        return tmp;				// top에 있는 노드를 지우고 반환한다.
+        System.out.println("pop : "+popedNode.data);
+        return popedNode;				// top에 있는 노드를 지우고 반환한다.
     }
 
     @Override
@@ -50,7 +46,7 @@ public class LinkedStack implements Stack {
         }						// size가 1이하면 두번째 원소가 없으므로 지우지 못한다.
 
         else {
-            Node tmp = this.top.next;
+            Node secondNode = this.top.next;
             if(size == 2 )
                 this.top.next = null;	// size가 2일때 2번째 원소만 null 해준다.
             else
@@ -59,8 +55,8 @@ public class LinkedStack implements Stack {
             // 두번째 원소가 지워진다.
             size--;						// 지우고 size 감소.
 
-            System.out.println("removed Node : "+ tmp.data);
-            return tmp;					// 지운 원소 반환
+            System.out.println("removed Node : "+ secondNode.data);
+            return secondNode;					// 지운 원소 반환
         }
 
     }
@@ -87,25 +83,31 @@ public class LinkedStack implements Stack {
 
     }
 
+    boolean isEmpty() {
+        return this.size == 0;
+    }
+
+    private String toString(Node x) {
+        if (x.next == null)
+            return x.data + " ";
+        else
+            return x.data + toString(x.next);
+    }
+
     public String toString() {
-        System.out.print("Current Elemnets of Stack : top");;
+        System.out.print("Current Elemnets of Stack : top");
 
-        Node p = this.top;
-
-        for ( ; p !=null ; p=p.next)
-            System.out.print(" -> "+p.data);
-
-        System.out.println(" ");
-        // 걸어나가면서 현재 스택상태를 출력해준다.
-        return "";
+        if (isEmpty())
+            return "[]";
+        else
+            return "[ " + toString(top) + "]";
     }
 
     private static class Node {					// 내부클래스형태의 Node
 
         int data ;
         Node next;
-
-        private Node (int data) {	this.data = data;	}
+        
         private Node (int data , Node next) { this.data = data;  this.next = next;}
     }
 
