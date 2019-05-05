@@ -107,7 +107,7 @@ public class LinkedStack implements Stack {
 
         int data ;
         Node next;
-        
+
         private Node (int data , Node next) { this.data = data;  this.next = next;}
     }
 
