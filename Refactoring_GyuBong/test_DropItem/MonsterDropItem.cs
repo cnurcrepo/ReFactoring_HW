@@ -3,11 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 주의 : 이 클래스는 Monobehavior를 상속받지 않아야 함
-/// 그래서 Adapter 클래스를 따로 만들었다.
-/// </summary>
-
 namespace UnityRPG_UnitTest
 {
     [Serializable]
