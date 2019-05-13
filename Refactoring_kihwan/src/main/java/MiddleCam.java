@@ -3,6 +3,14 @@ import lombok.Data;
 public class MiddleCam {
     private EtherNetFrame ethernetHeader = new EtherNetFrame();
 
+    public void setDstAddr(byte[] dstData) {
+        this.ethernetHeader.getEnetAddr().setDstAddr(dstData);
+    }
+
+    public void setSrcAddr(byte[] srcData) {
+        this.ethernetHeader.getEnetAddr().setSrcAddr(srcData);
+    }
+
     @Data
     private class EtherNetFrame {//src, dst 정보 하나의 객체 안에 넣기
         EtherNetAddr enetAddr;//dst 정보
@@ -34,11 +42,11 @@ public class MiddleCam {
             if (inputData[13] == 0x01) {
                 byte[] removeCapHeader = new byte[inputData.length - 14];
                 System.arraycopy(inputData, 14, removeCapHeader, 0, removeCapHeader.length);
-                System.out.println("send Ack");
+                System.out.print("send Ack");
                 this.sendEhternetAck(inputData);
                 return true;
             } else if (inputData[13] == 0x02) {
-                System.out.println("receive ack");
+                System.out.print("receive ack");
                 return false;//recive 안함 -> ack 받음 -> 다음 frame을 날림
             }
         }
