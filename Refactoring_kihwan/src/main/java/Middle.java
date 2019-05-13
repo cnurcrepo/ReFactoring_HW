@@ -22,7 +22,7 @@ public class Middle {
         private byte[] srcAddr = new byte[6];
         private byte[] dstAddr = new byte[6];
 
-        public EtherNetAddr() {
+        private EtherNetAddr() {
             for (int indexOfAddr = 0; indexOfAddr < srcAddr.length; ++indexOfAddr) {
                 this.srcAddr[indexOfAddr] = (byte) 0x00;
                 this.dstAddr[indexOfAddr] = (byte) 0x00;
@@ -53,6 +53,7 @@ public class Middle {
         }
         ackFrame[12] = 0x00;
         ackFrame[13] = 0x02;
+        //원래 코드에서는 하위 계층으로 호출해서 보내야함
         return true;
     }
 
