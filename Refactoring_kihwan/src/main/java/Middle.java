@@ -10,7 +10,7 @@ public class Middle {
         byte[] enetType;
         byte[] enetData;
 
-        public EtherNetFrame() {
+        private EtherNetFrame() {
             this.enetAddr = new EtherNetAddr();
             this.enetType = new byte[2];
             this.enetData = null;
@@ -30,5 +30,34 @@ public class Middle {
         }
     }
 
+    public boolean receiveFrameData(byte[] inputData) {
 
+        return false;
+    }
+
+    private boolean checkTheFrameData(byte[] myAddressData, byte[] inputFrameData, int inputDataStartIndex) {
+        for (int index = inputDataStartIndex; index < inputDataStartIndex + 6; index++) {
+            if (inputFrameData[inputDataStartIndex] != myAddressData[index - inputDataStartIndex]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isBoardData(byte[] inputFrameData) {// broad인지 판별 해주는 메소드
+        byte[] boradData = new byte[6];
+        for (int index = 0; index < 6; index++) {
+            boradData[index] = (byte) 0xFF;
+        }
+        byte[] srcAddr = this._ethernetHeader.getEnetAddr().getSrcAddr();
+        return this.checkTheFrameData(boradData, inputFrameData, 0)
+                && !this.checkTheFrameData(srcAddr, inputFrameData, 6);
+    }
+
+    private boolean isMyConnectionData(byte[] inputFrameData) {//연결된 data인지 판별 해주는 역할
+        byte[] srcAddr = this._ethernetHeader.getEnetAddr().getSrcAddr();
+        byte[] dstAddr = this._ethernetHeader.getEnetAddr().getDstAddr();
+        return this.checkTheFrameData(srcAddr, inputFrameData, 0)
+                && this.checkTheFrameData(dstAddr, inputFrameData, 6);
+    }
 }
