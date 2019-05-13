@@ -31,7 +31,7 @@ public class MiddleCam {
 
     public boolean Receive(byte[] input) {
         boolean isBroad = true;
-                if (isBroad && input[12] == (byte) 0x00) {
+        if (isBroad && input[12] == (byte) 0x00) {
             if (input[13] == 0x01) {
                 byte[] removeCapHeader = new byte[input.length - 14];
                 System.arraycopy(input, 14, removeCapHeader, 0, removeCapHeader.length);
@@ -45,7 +45,6 @@ public class MiddleCam {
         }
 
         int index = 0;
-
 
 
         if (input[index] == 0x00) {//처음 값이 동일
@@ -65,28 +64,43 @@ public class MiddleCam {
 
     private boolean checkTheFrameData(byte[] myAddressData, byte[] inputFrameData, int inputDataStartIndex) {
         for (int index = inputDataStartIndex; index < inputDataStartIndex + 6; index++) {
-            if(inputFrameData[index] != myAddressData[index - inputDataStartIndex]){
+            if (inputFrameData[index] != myAddressData[index - inputDataStartIndex]) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean sendEhternetAck() {//ack 만들어서 ack receive에 넣어준다
-        byte[] headerAddedArray = new byte[14];
-        int index = 0;
-        while (index < 6) {
-            headerAddedArray[index] = this.ethernetHeader.enetAddr.getAddrData(index);
-            index += 1;
+    private boolean isBoardData(byte[] inputFrameData) {
+        byte[] boardData = new byte[6];
+        for (int index = 0; index < 6; index++) {
+            boardData[index] = (byte) 0xFF;
         }
-        while (index < 12) {
-            headerAddedArray[index] = this.ethernetHeader.enet_srcaddr.getAddrData(index - 6);
-            index += 1;
-        }
-        headerAddedArray[index] = 0x00;
-        headerAddedArray[index + 1] = 0x02;
-        return true;
+
+        byte[] srcAddr = this.ethernetHeader.getEnetAddr().getSrcAddr();
+        return this.checkTheFrameData(boardData, inputFrameData, 0)
+                && !this.checkTheFrameData(srcAddr, inputFrameData, 6);
+    }
+
+    private boolean isMyConnectionData(byte[] inputFrameData) {
+        byte[] srcAddr = this.ethernetHeader.getEnetAddr().getSrcAddr();
+        byte[] dstAddr = this.ethernetHeader.getEnetAddr().getDstAddr();
+        return this.checkTheFrameData(dstAddr, inputFrameData, 6)
+                && this.checkTheFrameData(srcAddr, inputFrameData, 0);
     }
 
 
+    private boolean sendEhternetAck(byte[] inputData) {//ack 만들어서 ack receive에 넣어준다
+        byte[] ackFrame = new byte[14];
+        int index = 0;
+        while (index < 6) {
+            ackFrame[index] = inputData[index + 6];
+            ackFrame[index + 6] = inputData[index];
+            index += 1;
+        }
+        ackFrame[12] = 0x00;
+        ackFrame[13] = 0x02;
+        //원래 코드에서는 하위 계층으로 호출해서 보내야함
+        return true;
+    }
 }
