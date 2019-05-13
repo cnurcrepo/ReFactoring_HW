@@ -29,34 +29,17 @@ public class MiddleCam {
         }
     }
 
-    public boolean Receive(byte[] input) {
-        boolean isBroad = true;
-        if (isBroad && input[12] == (byte) 0x00) {
-            if (input[13] == 0x01) {
-                byte[] removeCapHeader = new byte[input.length - 14];
-                System.arraycopy(input, 14, removeCapHeader, 0, removeCapHeader.length);
+    public boolean receiveFrameData(byte[] inputData) {
+        if ((this.isBoardData(inputData) || this.isMyConnectionData(inputData)) && inputData[12] == (byte) 0x00) {
+            if (inputData[13] == 0x01) {
+                byte[] removeCapHeader = new byte[inputData.length - 14];
+                System.arraycopy(inputData, 14, removeCapHeader, 0, removeCapHeader.length);
                 System.out.println("send broad casting Ack");
-                this.sendEhternetAck();
+                this.sendEhternetAck(inputData);
                 return true;
-            } else if (input[13] == 0x02) {
+            } else if (inputData[13] == 0x02) {
                 System.out.println("receive ack so I send other frame broadcast");
                 return false;//recive 안함 -> ack 받음 -> 다음 frame을 날림
-            }
-        }
-
-        int index = 0;
-
-
-        if (input[index] == 0x00) {//처음 값이 동일
-            if (input[index + 1] == 0x01) {//data -> ack 생성 및 보내기
-                byte[] removeCapHeader = new byte[input.length - 14];//header 제거
-                System.arraycopy(input, 14, removeCapHeader, 0, removeCapHeader.length);
-                this.sendEhternetAck();
-                System.out.println("send ack and accept data from other");
-                return true;
-            } else if (input[index + 1] == 0x02) {
-                System.out.println("receive ack so I send other frame");
-                return false;// ack이므로 상위 계층에 다음 frame 보내도록 준비만 해주게 한다.
             }
         }
         return false;
