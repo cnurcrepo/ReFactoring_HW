@@ -47,13 +47,7 @@ public class MiddleCamTest {
         assertThat(this.middleCam.receiveFrameData(boardDataNext), is(true));
     }
 
-    @Test
-    public void out() {
-        System.out.print("hello");
-    }
-
-
-    @Test
+  @Test
     public void testReceiveFrameData() {
         //given
         byte[] frameData = new byte[28];
