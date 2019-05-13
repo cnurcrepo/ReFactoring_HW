@@ -1,35 +1,31 @@
+import lombok.Data;
+
 public class MiddleCam {
-    private _ETHERNET_Frame ethernetHeader = new _ETHERNET_Frame();
+    private EtherNetFrame ethernetHeader = new EtherNetFrame();
 
-    private class _ETHERNET_Frame {//src, dst 정보 하나의 객체 안에 넣기
-        _ETHERNET_ADDR enet_dstaddr;//dst 정보
-        _ETHERNET_ADDR enet_srcaddr;//src 정보
-        byte[] enet_type;
-        byte[] enet_data;
+    @Data
+    private class EtherNetFrame {//src, dst 정보 하나의 객체 안에 넣기
+        EtherNetAddr enetAddr;//dst 정보
+        byte[] enetType;
+        byte[] enetData;
 
-        public _ETHERNET_Frame() {
-            this.enet_dstaddr = new _ETHERNET_ADDR();
-            this.enet_srcaddr = new _ETHERNET_ADDR();
-            this.enet_type = new byte[2];
-            this.enet_data = null;
+        private EtherNetFrame() {
+            this.enetAddr = new EtherNetAddr();
+            this.enetType = new byte[2];
+            this.enetData = null;
         }
     }
 
-    private class _ETHERNET_ADDR {
-        private byte[] addr = new byte[6];
+    @Data
+    private class EtherNetAddr {
+        private byte[] dstAddr = new byte[6];
+        private byte[] srcAddr = new byte[6];
 
-        public _ETHERNET_ADDR() {
-            for (int indexOfAddr = 0; indexOfAddr < addr.length; ++indexOfAddr) {
-                this.addr[indexOfAddr] = (byte) 0x00;
+        private EtherNetAddr() {
+            for (int indexOfAddr = 0; indexOfAddr < 6; ++indexOfAddr) {
+                this.dstAddr[indexOfAddr] = (byte) 0x00;
+                this.srcAddr[indexOfAddr] = (byte) 0x00;
             }
-        }
-
-        public byte getAddrData(int index) {
-            return this.addr[index];
-        }
-
-        public void setAddrData(byte[] data) {
-            this.addr = data;
         }
     }
 
@@ -62,7 +58,7 @@ public class MiddleCam {
             index += 1;
         }
         while (index < 12) {
-            if (input[index] != this.ethernetHeader.enet_dstaddr.getAddrData(index - 6)) {
+            if (input[index] != this.ethernetHeader.enetAddr.getAddrData(index - 6)) {
                 System.out.println("fail At EtherNet");
                 return false;
             }
@@ -88,7 +84,7 @@ public class MiddleCam {
         byte[] headerAddedArray = new byte[14];
         int index = 0;
         while (index < 6) {
-            headerAddedArray[index] = this.ethernetHeader.enet_dstaddr.getAddrData(index);
+            headerAddedArray[index] = this.ethernetHeader.enetAddr.getAddrData(index);
             index += 1;
         }
         while (index < 12) {
