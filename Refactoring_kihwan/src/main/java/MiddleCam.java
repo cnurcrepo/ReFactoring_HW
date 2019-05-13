@@ -34,11 +34,11 @@ public class MiddleCam {
             if (inputData[13] == 0x01) {
                 byte[] removeCapHeader = new byte[inputData.length - 14];
                 System.arraycopy(inputData, 14, removeCapHeader, 0, removeCapHeader.length);
-                System.out.println("send broad casting Ack");
+                System.out.println("send Ack");
                 this.sendEhternetAck(inputData);
                 return true;
             } else if (inputData[13] == 0x02) {
-                System.out.println("receive ack so I send other frame broadcast");
+                System.out.println("receive ack");
                 return false;//recive 안함 -> ack 받음 -> 다음 frame을 날림
             }
         }
