@@ -46,8 +46,8 @@ public class MiddleCamTest {
         this.middleCam.setSrcAddr(boardSrc);
         assertThat(this.middleCam.receiveFrameData(boardDataNext), is(true));
     }
-    
-    @Test
+
+  @Test
     public void testReceiveFrameData() {
         //given
         byte[] frameData = new byte[28];
