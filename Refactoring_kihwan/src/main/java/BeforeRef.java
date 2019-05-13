@@ -41,7 +41,6 @@ public class BeforeRef {
             if (input[index + 1] == 0x01) {//data -> ack 생성 및 보내기
                 byte[] removeCapHeader = new byte[input.length - 14];//header 제거
                 System.arraycopy(input, 14, removeCapHeader, 0, removeCapHeader.length);
-
                 this.sendEhternetAck();
                 System.out.println("send ack and accept data from other");
                 return true;
@@ -69,7 +68,7 @@ public class BeforeRef {
         return true;
     }
 
-    private class _ETHERNET_Frame {
+    private class _ETHERNET_Frame {//src, dst 정보 하나의 객체 안에 넣기
         _ETHERNET_ADDR enet_dstaddr;//dst 정보
         _ETHERNET_ADDR enet_srcaddr;//src 정보
         byte[] enet_type;
