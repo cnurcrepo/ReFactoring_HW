@@ -17,7 +17,7 @@ public class MiddleCam {
     }
 
     @Data
-    private class EtherNetAddr {
+    private class EtherNetAddr { //extract subclass를 사용해서 1개의 클래스에 많은 filed변수를 저장
         private byte[] dstAddr = new byte[6];
         private byte[] srcAddr = new byte[6];
 
@@ -45,7 +45,7 @@ public class MiddleCam {
         return false;
     }
 
-    private boolean checkTheFrameData(byte[] myAddressData, byte[] inputFrameData, int inputDataStartIndex) {
+    private boolean checkTheFrameData(byte[] myAddressData, byte[] inputFrameData, int inputDataStartIndex) {// add prarmeter 사용,
         for (int index = inputDataStartIndex; index < inputDataStartIndex + 6; index++) {
             if (inputFrameData[index] != myAddressData[index - inputDataStartIndex]) {
                 return false;
@@ -72,6 +72,7 @@ public class MiddleCam {
                 && this.checkTheFrameData(srcAddr, inputFrameData, 0);
     }
 
+    //위에 3개 메소드로 Extract Method로 receive안에 있는 모든 기능을 함수로 뺴서 더 보기 편하게 하였다
 
     private boolean sendEhternetAck(byte[] inputData) {//ack 만들어서 ack receive에 넣어준다
         byte[] ackFrame = new byte[14];
