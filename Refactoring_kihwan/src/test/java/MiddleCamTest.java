@@ -46,13 +46,7 @@ public class MiddleCamTest {
         this.middleCam.setSrcAddr(boardSrc);
         assertThat(this.middleCam.receiveFrameData(boardDataNext), is(true));
     }
-
-    @Test
-    public void out() {
-        System.out.print("hello");
-    }
-
-
+    
     @Test
     public void testReceiveFrameData() {
         //given
